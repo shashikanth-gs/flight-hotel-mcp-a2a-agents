@@ -68,13 +68,13 @@ jobs:
         include:
           - name: MCP servers
             dockerfile: mcp-servers/Dockerfile
-            tag: travel-mcp-server:test
+            tag: flight-hotel-mcp-server:test
           - name: ADK agent
             dockerfile: agents/adk/Dockerfile
-            tag: a2a-travel-adk:test
+            tag: flight-hotel-a2a-adk:test
           - name: LangGraph agent
             dockerfile: agents/langgraph/Dockerfile
-            tag: a2a-travel-langgraph:test
+            tag: flight-hotel-a2a-langgraph:test
 
     steps:
       - name: Check out repository

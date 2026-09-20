@@ -32,9 +32,9 @@ network unless direct MCP interoperability testing is part of the goal.
 Example build commands:
 
 ```bash
-docker build -f mcp-servers/Dockerfile -t travel-mcp-server:0.2.0 .
-docker build -f agents/adk/Dockerfile -t a2a-travel-adk:0.2.0 .
-docker build -f agents/langgraph/Dockerfile -t a2a-travel-langgraph:0.2.0 .
+docker build -f mcp-servers/Dockerfile -t flight-hotel-mcp-server:0.2.0 .
+docker build -f agents/adk/Dockerfile -t flight-hotel-a2a-adk:0.2.0 .
+docker build -f agents/langgraph/Dockerfile -t flight-hotel-a2a-langgraph:0.2.0 .
 ```
 
 Start the same agent image with `AGENT_MODEL_MODE=real` and `AGENT_MODEL_MODE=stub` to create

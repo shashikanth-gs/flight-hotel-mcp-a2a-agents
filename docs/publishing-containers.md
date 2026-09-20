@@ -4,9 +4,9 @@ GitHub Actions publishes three public image repositories to Docker Hub:
 
 | Image | Purpose | Runtime variants |
 |---|---|---|
-| `<namespace>/travel-mcp-server` | Standalone flight and hotel MCP servers | `flight-mcp` or `hotel-mcp` command |
-| `<namespace>/a2a-travel-adk` | Google ADK A2A agent | Real or stub mode through environment variables |
-| `<namespace>/a2a-travel-langgraph` | LangGraph A2A agent | Real or stub mode through environment variables |
+| `<namespace>/flight-hotel-mcp-server` | Standalone flight and hotel MCP servers | `flight-mcp` or `hotel-mcp` command |
+| `<namespace>/flight-hotel-a2a-adk` | Google ADK A2A agent | Real or stub mode through environment variables |
+| `<namespace>/flight-hotel-a2a-langgraph` | LangGraph A2A agent | Real or stub mode through environment variables |
 
 The MCP image intentionally omits the `a2a-` prefix because it works with any Streamable HTTP MCP
 client. The agent images retain the prefix because their public interface is A2A. One MCP image is
@@ -57,9 +57,9 @@ After the first successful publication, replace `<namespace>` with the configure
 namespace:
 
 ```bash
-docker pull <namespace>/travel-mcp-server:latest
-docker pull <namespace>/a2a-travel-adk:latest
-docker pull <namespace>/a2a-travel-langgraph:latest
+docker pull <namespace>/flight-hotel-mcp-server:latest
+docker pull <namespace>/flight-hotel-a2a-adk:latest
+docker pull <namespace>/flight-hotel-a2a-langgraph:latest
 ```
 
 For repeatable deployments, pin a version tag or image digest instead of `latest`.

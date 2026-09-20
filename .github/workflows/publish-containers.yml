@@ -25,15 +25,15 @@ jobs:
       matrix:
         include:
           - name: MCP servers
-            image: travel-mcp-server
+            image: flight-hotel-mcp-server
             dockerfile: mcp-servers/Dockerfile
             description: Deterministic flight and hotel fixture servers for any MCP client
           - name: ADK agent
-            image: a2a-travel-adk
+            image: flight-hotel-a2a-adk
             dockerfile: agents/adk/Dockerfile
             description: Google ADK travel agent with real and deterministic model modes
           - name: LangGraph agent
-            image: a2a-travel-langgraph
+            image: flight-hotel-a2a-langgraph
             dockerfile: agents/langgraph/Dockerfile
             description: LangGraph travel agent with real and deterministic model modes
 
