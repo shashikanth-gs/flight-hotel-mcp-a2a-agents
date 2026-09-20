@@ -22,16 +22,16 @@ classifiers = [
 dependencies = [
   "a2a-sdk[http-server]==1.1.2",
   "fastapi>=0.133,<1",
-  "langchain-litellm==0.7.0",
-  "langchain-mcp-adapters==0.3.1",
-  "langgraph==1.2.10",
-  "litellm==1.94.0",
-  "mcp==1.29.0",
-  "opentelemetry-exporter-otlp-proto-http==1.42.1",
-  "opentelemetry-instrumentation-asgi==0.63b1",
-  "opentelemetry-sdk==1.42.1",
-  "openinference-instrumentation-langchain==0.1.67",
-  "python-dotenv==1.1.1",
+  "langchain-litellm==0.7.2",
+  "langchain-mcp-adapters==0.3.2",
+  "langgraph==1.2.11",
+  "litellm==1.101.0",
+  "mcp==2.2.0",
+  "opentelemetry-exporter-otlp-proto-http==1.44.0",
+  "opentelemetry-instrumentation-asgi==0.65b0",
+  "opentelemetry-sdk==1.44.0",
+  "openinference-instrumentation-langchain==0.1.76",
+  "python-dotenv==1.2.3",
   "uvicorn>=0.30",
 ]
 
@@ -42,7 +42,7 @@ langgraph-a2a-probe = "langgraph_travel_agent.probe:main"
 [dependency-groups]
 dev = [
   "httpx2>=2.0",
-  "ruff==0.16.0",
+  "ruff==0.16.8",
 ]
 
 [tool.setuptools.packages.find]
