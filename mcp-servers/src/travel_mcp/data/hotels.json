@@ -1,0 +1,14 @@
+[
+  {"hotel_id":"HTL-DEL-01","name":"Delhi Gateway Hotel","city":"Delhi","city_code":"DEL","country_code":"IN","area":"Aerocity","stars":4,"nightly_rate_inr":7800,"max_guests_per_room":3,"amenities":["wifi","breakfast","airport shuttle"]},
+  {"hotel_id":"HTL-DEL-02","name":"Connaught Square Rooms","city":"Delhi","city_code":"DEL","country_code":"IN","area":"Connaught Place","stars":3,"nightly_rate_inr":4900,"max_guests_per_room":2,"amenities":["wifi","breakfast"]},
+  {"hotel_id":"HTL-BOM-01","name":"Mumbai Harbour Stay","city":"Mumbai","city_code":"BOM","country_code":"IN","area":"Colaba","stars":4,"nightly_rate_inr":9200,"max_guests_per_room":3,"amenities":["wifi","breakfast","pool"]},
+  {"hotel_id":"HTL-BOM-02","name":"Bandra City Hotel","city":"Mumbai","city_code":"BOM","country_code":"IN","area":"Bandra","stars":3,"nightly_rate_inr":6100,"max_guests_per_room":2,"amenities":["wifi","workspace"]},
+  {"hotel_id":"HTL-BLR-01","name":"Bengaluru Garden Suites","city":"Bengaluru","city_code":"BLR","country_code":"IN","area":"Indiranagar","stars":4,"nightly_rate_inr":7200,"max_guests_per_room":3,"amenities":["wifi","breakfast","gym"]},
+  {"hotel_id":"HTL-GOI-01","name":"Goa Palm Retreat","city":"Goa","city_code":"GOI","country_code":"IN","area":"Candolim","stars":4,"nightly_rate_inr":8400,"max_guests_per_room":4,"amenities":["wifi","pool","beach shuttle"]},
+  {"hotel_id":"HTL-DXB-01","name":"Dubai Creek View","city":"Dubai","city_code":"DXB","country_code":"AE","area":"Deira","stars":4,"nightly_rate_inr":11800,"max_guests_per_room":3,"amenities":["wifi","breakfast","pool"]},
+  {"hotel_id":"HTL-SIN-01","name":"Singapore Riverside Rooms","city":"Singapore","city_code":"SIN","country_code":"SG","area":"Clarke Quay","stars":4,"nightly_rate_inr":13400,"max_guests_per_room":2,"amenities":["wifi","gym","pool"]},
+  {"hotel_id":"HTL-LON-01","name":"London Park Terrace","city":"London","city_code":"LHR","country_code":"GB","area":"Paddington","stars":4,"nightly_rate_inr":17600,"max_guests_per_room":2,"amenities":["wifi","breakfast"]},
+  {"hotel_id":"HTL-PAR-01","name":"Paris Left Bank House","city":"Paris","city_code":"CDG","country_code":"FR","area":"Latin Quarter","stars":4,"nightly_rate_inr":16900,"max_guests_per_room":2,"amenities":["wifi","breakfast"]},
+  {"hotel_id":"HTL-NYC-01","name":"New York Midtown Rooms","city":"New York","city_code":"JFK","country_code":"US","area":"Midtown","stars":4,"nightly_rate_inr":21100,"max_guests_per_room":3,"amenities":["wifi","gym"]},
+  {"hotel_id":"HTL-TYO-01","name":"Tokyo Station Stay","city":"Tokyo","city_code":"NRT","country_code":"JP","area":"Marunouchi","stars":4,"nightly_rate_inr":14800,"max_guests_per_room":2,"amenities":["wifi","breakfast","laundry"]}
+]

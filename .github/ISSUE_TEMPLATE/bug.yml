@@ -1,0 +1,70 @@
+name: Bug report
+description: Report a reproducible defect in an agent, MCP service, fixture, or document.
+title: "[Bug]: "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Do not include API keys, authorization headers, or sensitive prompts.
+  - type: dropdown
+    id: component
+    attributes:
+      label: Component
+      options:
+        - Flight MCP
+        - Hotel MCP
+        - ADK agent
+        - LangGraph agent
+        - Docker or Compose
+        - Documentation
+        - Other
+    validations:
+      required: true
+  - type: dropdown
+    id: mode
+    attributes:
+      label: Model mode
+      options:
+        - Stub
+        - Real NVIDIA NIM
+        - Not applicable
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction
+      description: Provide the smallest complete sequence that reproduces the issue.
+      placeholder: Commands, request payload, and sanitized configuration
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior and sanitized logs
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Environment
+      placeholder: OS, Python or Docker version, and project revision
+    validations:
+      required: true
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checks
+      options:
+        - label: I removed credentials and sensitive information.
+          required: true
+        - label: I searched existing issues.
+          required: true

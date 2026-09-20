@@ -1,0 +1,48 @@
+version: 2
+updates:
+  - package-ecosystem: pip
+    directory: /mcp-servers
+    schedule:
+      interval: weekly
+    groups:
+      python-dependencies:
+        patterns: ["*"]
+
+  - package-ecosystem: pip
+    directory: /agents/adk
+    schedule:
+      interval: weekly
+    groups:
+      python-dependencies:
+        patterns: ["*"]
+
+  - package-ecosystem: pip
+    directory: /agents/langgraph
+    schedule:
+      interval: weekly
+    groups:
+      python-dependencies:
+        patterns: ["*"]
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      actions:
+        patterns: ["*"]
+
+  - package-ecosystem: docker
+    directory: /mcp-servers
+    schedule:
+      interval: weekly
+
+  - package-ecosystem: docker
+    directory: /agents/adk
+    schedule:
+      interval: weekly
+
+  - package-ecosystem: docker
+    directory: /agents/langgraph
+    schedule:
+      interval: weekly

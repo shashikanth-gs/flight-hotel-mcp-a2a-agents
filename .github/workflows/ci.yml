@@ -1,0 +1,87 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  python:
+    name: ${{ matrix.component.name }} · Python ${{ matrix.python }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ["3.11", "3.12", "3.13", "3.14"]
+        component:
+          - name: MCP servers
+            path: mcp-servers
+            tests: mcp-servers/tests
+          - name: ADK agent
+            path: agents/adk
+            tests: agents/adk/tests
+          - name: LangGraph agent
+            path: agents/langgraph
+            tests: agents/langgraph/tests
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Install uv and Python
+        uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d # v10.0.1
+        with:
+          version: "0.12.12"
+          python-version: ${{ matrix.python }}
+          enable-cache: true
+          cache-dependency-glob: "${{ matrix.component.path }}/uv.lock"
+
+      - name: Install locked dependencies
+        run: uv sync --project "${{ matrix.component.path }}" --locked
+
+      - name: Lint
+        run: uv run --project "${{ matrix.component.path }}" ruff check "${{ matrix.component.path }}/src" "${{ matrix.component.tests }}"
+
+      - name: Check formatting
+        run: uv run --project "${{ matrix.component.path }}" ruff format --check "${{ matrix.component.path }}/src" "${{ matrix.component.tests }}"
+
+      - name: Test
+        run: uv run --project "${{ matrix.component.path }}" python -m unittest discover -s "${{ matrix.component.tests }}" -v
+
+  containers:
+    name: Container · ${{ matrix.name }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: MCP servers
+            dockerfile: mcp-servers/Dockerfile
+            tag: travel-mcp-server:test
+          - name: ADK agent
+            dockerfile: agents/adk/Dockerfile
+            tag: a2a-travel-adk:test
+          - name: LangGraph agent
+            dockerfile: agents/langgraph/Dockerfile
+            tag: a2a-travel-langgraph:test
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Validate Compose configuration
+        run: docker compose config --quiet
+
+      - name: Build image
+        run: docker build --file "${{ matrix.dockerfile }}" --tag "${{ matrix.tag }}" .

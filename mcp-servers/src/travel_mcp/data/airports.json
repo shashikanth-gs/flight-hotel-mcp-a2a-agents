@@ -1,0 +1,18 @@
+[
+  {"iata":"DEL","city":"Delhi","name":"Indira Gandhi International Airport","country_code":"IN","timezone":"Asia/Kolkata"},
+  {"iata":"BOM","city":"Mumbai","name":"Chhatrapati Shivaji Maharaj International Airport","country_code":"IN","timezone":"Asia/Kolkata"},
+  {"iata":"BLR","city":"Bengaluru","name":"Kempegowda International Airport","country_code":"IN","timezone":"Asia/Kolkata"},
+  {"iata":"MAA","city":"Chennai","name":"Chennai International Airport","country_code":"IN","timezone":"Asia/Kolkata"},
+  {"iata":"HYD","city":"Hyderabad","name":"Rajiv Gandhi International Airport","country_code":"IN","timezone":"Asia/Kolkata"},
+  {"iata":"CCU","city":"Kolkata","name":"Netaji Subhas Chandra Bose International Airport","country_code":"IN","timezone":"Asia/Kolkata"},
+  {"iata":"GOI","city":"Goa","name":"Dabolim Airport","country_code":"IN","timezone":"Asia/Kolkata"},
+  {"iata":"COK","city":"Kochi","name":"Cochin International Airport","country_code":"IN","timezone":"Asia/Kolkata"},
+  {"iata":"DXB","city":"Dubai","name":"Dubai International Airport","country_code":"AE","timezone":"Asia/Dubai"},
+  {"iata":"SIN","city":"Singapore","name":"Singapore Changi Airport","country_code":"SG","timezone":"Asia/Singapore"},
+  {"iata":"LHR","city":"London","name":"Heathrow Airport","country_code":"GB","timezone":"Europe/London"},
+  {"iata":"CDG","city":"Paris","name":"Charles de Gaulle Airport","country_code":"FR","timezone":"Europe/Paris"},
+  {"iata":"JFK","city":"New York","name":"John F. Kennedy International Airport","country_code":"US","timezone":"America/New_York"},
+  {"iata":"NRT","city":"Tokyo","name":"Narita International Airport","country_code":"JP","timezone":"Asia/Tokyo"},
+  {"iata":"SYD","city":"Sydney","name":"Sydney Airport","country_code":"AU","timezone":"Australia/Sydney"},
+  {"iata":"FRA","city":"Frankfurt","name":"Frankfurt Airport","country_code":"DE","timezone":"Europe/Berlin"}
+]
