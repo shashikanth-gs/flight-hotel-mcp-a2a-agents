@@ -21,13 +21,13 @@ classifiers = [
 ]
 dependencies = [
   "a2a-sdk[http-server]==1.1.2",
-  "google-adk==2.5.0",
-  "litellm==1.94.0",
-  "mcp==1.29.0",
-  "opentelemetry-exporter-otlp-proto-http==1.42.1",
-  "opentelemetry-instrumentation-asgi==0.63b1",
-  "opentelemetry-sdk==1.42.1",
-  "python-dotenv==1.1.1",
+  "google-adk==2.9.1",
+  "litellm==1.101.0",
+  "mcp==2.2.0",
+  "opentelemetry-exporter-otlp-proto-http==1.44.0",
+  "opentelemetry-instrumentation-asgi==0.65b0",
+  "opentelemetry-sdk==1.44.0",
+  "python-dotenv==1.2.3",
   "uvicorn>=0.30",
 ]
 
@@ -38,7 +38,7 @@ adk-a2a-probe = "adk_travel_agent.probe:main"
 [dependency-groups]
 dev = [
   "httpx2>=2.0",
-  "ruff==0.16.0",
+  "ruff==0.16.8",
 ]
 
 [tool.setuptools.packages.find]
