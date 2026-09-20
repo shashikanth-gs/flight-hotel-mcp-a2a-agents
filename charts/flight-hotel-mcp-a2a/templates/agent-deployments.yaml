@@ -1,0 +1,144 @@
+{{- $root := . -}}
+{{- $realEnabled := or .Values.agents.adk.real.enabled .Values.agents.langgraph.real.enabled -}}
+{{- if and $realEnabled (empty .Values.nvidia.existingSecret) (empty .Values.nvidia.apiKey) -}}
+{{- fail "real agents require nvidia.existingSecret or nvidia.apiKey" -}}
+{{- end -}}
+{{- if and (not (empty .Values.nvidia.existingSecret)) (not (empty .Values.nvidia.apiKey)) -}}
+{{- fail "set only one of nvidia.existingSecret or nvidia.apiKey" -}}
+{{- end -}}
+{{- $flightService := include "flight-hotel-mcp-a2a.componentName" (dict "root" $root "component" "flight-mcp") -}}
+{{- $hotelService := include "flight-hotel-mcp-a2a.componentName" (dict "root" $root "component" "hotel-mcp") -}}
+{{- $flightUrl := default (printf "http://%s:%d/mcp" $flightService (int .Values.mcp.flight.service.port)) .Values.agents.mcp.flightUrl -}}
+{{- $hotelUrl := default (printf "http://%s:%d/mcp" $hotelService (int .Values.mcp.hotel.service.port)) .Values.agents.mcp.hotelUrl -}}
+{{- range $frameworkName, $agent := dict "adk" .Values.agents.adk "langgraph" .Values.agents.langgraph }}
+{{- range $modeName, $mode := dict "real" $agent.real "stub" $agent.stub }}
+{{- if $mode.enabled }}
+{{- $component := printf "%s-%s" $frameworkName $modeName -}}
+{{- $resourceName := include "flight-hotel-mcp-a2a.componentName" (dict "root" $root "component" $component) -}}
+{{- $publicBaseUrl := default (printf "http://%s:%d" $resourceName (int $agent.service.port)) $mode.publicBaseUrl -}}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ $resourceName | quote }}
+  labels:
+    {{- include "flight-hotel-mcp-a2a.componentLabels" (dict "root" $root "component" $component) | nindent 4 }}
+spec:
+  replicas: {{ $mode.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "flight-hotel-mcp-a2a.selectorLabels" (dict "root" $root "component" $component) | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "flight-hotel-mcp-a2a.componentLabels" (dict "root" $root "component" $component) | nindent 8 }}
+        {{- with $root.Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      {{- with $root.Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    spec:
+      automountServiceAccountToken: false
+      {{- with $root.Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      securityContext:
+        {{- toYaml $root.Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ $component | quote }}
+          image: {{ include "flight-hotel-mcp-a2a.image" (dict "root" $root "image" $agent.image) | quote }}
+          imagePullPolicy: {{ $root.Values.global.imagePullPolicy | quote }}
+          securityContext:
+            {{- toYaml $root.Values.securityContext | nindent 12 }}
+          env:
+            - name: AGENT_MODEL_MODE
+              value: {{ $modeName | quote }}
+            - name: AGENT_HOST
+              value: "0.0.0.0"
+            - name: {{ ternary "ADK_AGENT_PORT" "LANGGRAPH_AGENT_PORT" (eq $frameworkName "adk") }}
+              value: {{ $agent.containerPort | quote }}
+            - name: {{ ternary "ADK_PUBLIC_BASE_URL" "LANGGRAPH_PUBLIC_BASE_URL" (eq $frameworkName "adk") }}
+              value: {{ $publicBaseUrl | quote }}
+            - name: FLIGHT_MCP_URL
+              value: {{ $flightUrl | quote }}
+            - name: HOTEL_MCP_URL
+              value: {{ $hotelUrl | quote }}
+            - name: RATE_LIMIT_ENABLED
+              {{- if eq $modeName "real" }}
+              value: {{ $mode.rateLimit.enabled | quote }}
+              {{- else }}
+              value: "false"
+              {{- end }}
+            {{- if eq $modeName "real" }}
+            - name: RATE_LIMIT_REQUESTS
+              value: {{ $mode.rateLimit.requests | quote }}
+            - name: RATE_LIMIT_WINDOW_SECONDS
+              value: {{ $mode.rateLimit.windowSeconds | quote }}
+            - name: NVIDIA_NIM_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "flight-hotel-mcp-a2a.nvidiaSecretName" $root | quote }}
+                  key: {{ $root.Values.nvidia.secretKey | quote }}
+            - name: NVIDIA_MODEL
+              value: {{ $root.Values.nvidia.model | quote }}
+            - name: NVIDIA_NIM_API_BASE
+              value: {{ $root.Values.nvidia.apiBase | quote }}
+            {{- end }}
+            {{- with $root.Values.observability.otlpEndpoint }}
+            - name: OTEL_EXPORTER_OTLP_TRACES_ENDPOINT
+              value: {{ . | quote }}
+            {{- end }}
+            {{- with $root.Values.observability.otlpHeaders }}
+            - name: OTEL_EXPORTER_OTLP_HEADERS
+              value: {{ . | quote }}
+            {{- end }}
+            {{- with $agent.extraEnv }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+          ports:
+            - name: http
+              containerPort: {{ $agent.containerPort }}
+              protocol: TCP
+          readinessProbe:
+            httpGet:
+              path: /.well-known/agent-card.json
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 6
+          livenessProbe:
+            httpGet:
+              path: /.well-known/agent-card.json
+              port: http
+            initialDelaySeconds: 20
+            periodSeconds: 20
+            timeoutSeconds: 3
+            failureThreshold: 3
+          resources:
+            {{- toYaml $mode.resources | nindent 12 }}
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: tmp
+          emptyDir:
+            sizeLimit: 64Mi
+      {{- with $root.Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with $root.Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with $root.Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+{{ end }}
+{{ end }}
+{{ end }}

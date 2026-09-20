@@ -40,6 +40,21 @@ docker build -f agents/langgraph/Dockerfile -t flight-hotel-a2a-langgraph:0.2.0 
 Start the same agent image with `AGENT_MODEL_MODE=real` and `AGENT_MODEL_MODE=stub` to create
 the two variants.
 
+## Kubernetes with Helm
+
+The repository includes a validated Helm chart. Its default installation deploys the two MCP
+servers and both credential-free stub agents:
+
+```bash
+helm upgrade --install travel ./charts/flight-hotel-mcp-a2a \
+  --namespace travel \
+  --create-namespace
+```
+
+Real ADK and LangGraph agents are optional and consume the NVIDIA key from an existing Kubernetes
+Secret. See the [chart documentation](../charts/flight-hotel-mcp-a2a/README.md) for installation,
+port-forwarding, public Agent Card URLs, image overrides, and security settings.
+
 ## Security boundary
 
 These services do not implement authentication, authorization, abuse prevention, or tenant

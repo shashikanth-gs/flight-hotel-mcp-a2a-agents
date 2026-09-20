@@ -1,0 +1,28 @@
+{{- $root := . -}}
+{{- range $frameworkName, $agent := dict "adk" .Values.agents.adk "langgraph" .Values.agents.langgraph }}
+{{- range $modeName, $mode := dict "real" $agent.real "stub" $agent.stub }}
+{{- if $mode.enabled }}
+{{- $component := printf "%s-%s" $frameworkName $modeName -}}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "flight-hotel-mcp-a2a.componentName" (dict "root" $root "component" $component) | quote }}
+  labels:
+    {{- include "flight-hotel-mcp-a2a.componentLabels" (dict "root" $root "component" $component) | nindent 4 }}
+  {{- with $agent.service.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  type: {{ $agent.service.type | quote }}
+  selector:
+    {{- include "flight-hotel-mcp-a2a.selectorLabels" (dict "root" $root "component" $component) | nindent 4 }}
+  ports:
+    - name: http
+      port: {{ $agent.service.port }}
+      targetPort: http
+      protocol: TCP
+{{ end }}
+{{ end }}
+{{ end }}

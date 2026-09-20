@@ -1,0 +1,163 @@
+nameOverride: ""
+fullnameOverride: ""
+
+global:
+  imageTag: main
+  imagePullPolicy: IfNotPresent
+
+imagePullSecrets: []
+podAnnotations: {}
+podLabels: {}
+
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 10001
+  runAsGroup: 10001
+  fsGroup: 10001
+  seccompProfile:
+    type: RuntimeDefault
+
+securityContext:
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: true
+  capabilities:
+    drop:
+      - ALL
+
+nodeSelector: {}
+tolerations: []
+affinity: {}
+
+mcp:
+  flight:
+    enabled: true
+    replicaCount: 1
+    image:
+      repository: shashikanthg/flight-hotel-mcp-server
+      tag: ""
+    containerPort: 4301
+    service:
+      type: ClusterIP
+      port: 4301
+      annotations: {}
+    extraAllowedHosts: []
+    resources:
+      requests:
+        cpu: 50m
+        memory: 64Mi
+      limits:
+        cpu: 500m
+        memory: 256Mi
+
+  hotel:
+    enabled: true
+    replicaCount: 1
+    image:
+      repository: shashikanthg/flight-hotel-mcp-server
+      tag: ""
+    containerPort: 4302
+    service:
+      type: ClusterIP
+      port: 4302
+      annotations: {}
+    extraAllowedHosts: []
+    resources:
+      requests:
+        cpu: 50m
+        memory: 64Mi
+      limits:
+        cpu: 500m
+        memory: 256Mi
+
+agents:
+  # Leave empty to use the MCP Services created by this chart.
+  mcp:
+    flightUrl: ""
+    hotelUrl: ""
+
+  adk:
+    image:
+      repository: shashikanthg/flight-hotel-a2a-adk
+      tag: ""
+    containerPort: 4201
+    service:
+      type: ClusterIP
+      port: 4201
+      annotations: {}
+    extraEnv: []
+    stub:
+      enabled: true
+      replicaCount: 1
+      publicBaseUrl: ""
+      resources:
+        requests:
+          cpu: 100m
+          memory: 256Mi
+        limits:
+          cpu: "1"
+          memory: 1Gi
+    real:
+      enabled: false
+      replicaCount: 1
+      publicBaseUrl: ""
+      rateLimit:
+        enabled: true
+        requests: 1
+        windowSeconds: 60
+      resources:
+        requests:
+          cpu: 100m
+          memory: 256Mi
+        limits:
+          cpu: "1"
+          memory: 1Gi
+
+  langgraph:
+    image:
+      repository: shashikanthg/flight-hotel-a2a-langgraph
+      tag: ""
+    containerPort: 4202
+    service:
+      type: ClusterIP
+      port: 4202
+      annotations: {}
+    extraEnv: []
+    stub:
+      enabled: true
+      replicaCount: 1
+      publicBaseUrl: ""
+      resources:
+        requests:
+          cpu: 100m
+          memory: 256Mi
+        limits:
+          cpu: "1"
+          memory: 1Gi
+    real:
+      enabled: false
+      replicaCount: 1
+      publicBaseUrl: ""
+      rateLimit:
+        enabled: true
+        requests: 1
+        windowSeconds: 60
+      resources:
+        requests:
+          cpu: 100m
+          memory: 256Mi
+        limits:
+          cpu: "1"
+          memory: 1Gi
+
+nvidia:
+  # Prefer an existing Secret. The key named below must contain the NVIDIA NIM API key.
+  existingSecret: ""
+  secretKey: NVIDIA_NIM_API_KEY
+  # Convenience option for local testing only. Avoid committing a real key to a values file.
+  apiKey: ""
+  model: nvidia_nim/nvidia/llama-3.3-nemotron-super-49b-v1.5
+  apiBase: https://integrate.api.nvidia.com/v1/
+
+observability:
+  otlpEndpoint: ""
+  otlpHeaders: ""

@@ -1,0 +1,26 @@
+{{- $root := . -}}
+{{- range $serverName, $server := .Values.mcp }}
+{{- if $server.enabled }}
+{{- $component := printf "%s-mcp" $serverName -}}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "flight-hotel-mcp-a2a.componentName" (dict "root" $root "component" $component) | quote }}
+  labels:
+    {{- include "flight-hotel-mcp-a2a.componentLabels" (dict "root" $root "component" $component) | nindent 4 }}
+  {{- with $server.service.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  type: {{ $server.service.type | quote }}
+  selector:
+    {{- include "flight-hotel-mcp-a2a.selectorLabels" (dict "root" $root "component" $component) | nindent 4 }}
+  ports:
+    - name: http
+      port: {{ $server.service.port }}
+      targetPort: http
+      protocol: TCP
+{{ end }}
+{{ end }}

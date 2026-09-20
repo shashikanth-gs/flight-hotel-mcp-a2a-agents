@@ -144,6 +144,7 @@ See [local development](docs/local-development.md) for native Python setup and p
 ├── agents/
 │   ├── adk/                 # Google ADK A2A implementation
 │   └── langgraph/           # LangGraph A2A implementation
+├── charts/                  # Helm chart for Kubernetes deployment
 ├── mcp-servers/             # Flight and hotel MCP entry points plus fixture data
 ├── docs/                    # Architecture, configuration, deployment, and data notes
 ├── .github/                 # CI, dependency updates, and contribution templates
@@ -162,6 +163,7 @@ client version.
 - [Configuration reference](docs/configuration.md)
 - [Local development](docs/local-development.md)
 - [Deployment guide](docs/deployment.md)
+- [Helm chart](charts/flight-hotel-mcp-a2a/README.md)
 - [Publishing container images](docs/publishing-containers.md)
 - [Fixture data and limitations](docs/data-and-limitations.md)
 - [Contributing](CONTRIBUTING.md)

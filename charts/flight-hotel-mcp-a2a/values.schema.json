@@ -1,0 +1,168 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "title": "flight-hotel-mcp-a2a values",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["global", "mcp", "agents", "nvidia", "observability"],
+  "properties": {
+    "nameOverride": {"type": "string"},
+    "fullnameOverride": {"type": "string"},
+    "global": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["imageTag", "imagePullPolicy"],
+      "properties": {
+        "imageTag": {"type": "string", "minLength": 1},
+        "imagePullPolicy": {"type": "string", "enum": ["Always", "IfNotPresent", "Never"]}
+      }
+    },
+    "imagePullSecrets": {"type": "array", "items": {"type": "object"}},
+    "podAnnotations": {"$ref": "#/definitions/stringMap"},
+    "podLabels": {"$ref": "#/definitions/stringMap"},
+    "podSecurityContext": {"type": "object"},
+    "securityContext": {"type": "object"},
+    "nodeSelector": {"$ref": "#/definitions/stringMap"},
+    "tolerations": {"type": "array", "items": {"type": "object"}},
+    "affinity": {"type": "object"},
+    "mcp": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["flight", "hotel"],
+      "properties": {
+        "flight": {"$ref": "#/definitions/mcpServer"},
+        "hotel": {"$ref": "#/definitions/mcpServer"}
+      }
+    },
+    "agents": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mcp", "adk", "langgraph"],
+      "properties": {
+        "mcp": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["flightUrl", "hotelUrl"],
+          "properties": {
+            "flightUrl": {"type": "string"},
+            "hotelUrl": {"type": "string"}
+          }
+        },
+        "adk": {"$ref": "#/definitions/agent"},
+        "langgraph": {"$ref": "#/definitions/agent"}
+      }
+    },
+    "nvidia": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["existingSecret", "secretKey", "apiKey", "model", "apiBase"],
+      "properties": {
+        "existingSecret": {"type": "string"},
+        "secretKey": {"type": "string", "minLength": 1},
+        "apiKey": {"type": "string"},
+        "model": {"type": "string", "minLength": 1},
+        "apiBase": {"type": "string", "minLength": 1}
+      }
+    },
+    "observability": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["otlpEndpoint", "otlpHeaders"],
+      "properties": {
+        "otlpEndpoint": {"type": "string"},
+        "otlpHeaders": {"type": "string"}
+      }
+    }
+  },
+  "definitions": {
+    "stringMap": {
+      "type": "object",
+      "additionalProperties": {"type": "string"}
+    },
+    "image": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["repository", "tag"],
+      "properties": {
+        "repository": {"type": "string", "minLength": 1},
+        "tag": {"type": "string"}
+      }
+    },
+    "service": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "port", "annotations"],
+      "properties": {
+        "type": {"type": "string", "enum": ["ClusterIP", "NodePort", "LoadBalancer"]},
+        "port": {"type": "integer", "minimum": 1, "maximum": 65535},
+        "annotations": {"$ref": "#/definitions/stringMap"}
+      }
+    },
+    "resources": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "requests": {"type": "object", "additionalProperties": {"type": ["string", "number"]}},
+        "limits": {"type": "object", "additionalProperties": {"type": ["string", "number"]}}
+      }
+    },
+    "mcpServer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["enabled", "replicaCount", "image", "containerPort", "service", "extraAllowedHosts", "resources"],
+      "properties": {
+        "enabled": {"type": "boolean"},
+        "replicaCount": {"type": "integer", "minimum": 1},
+        "image": {"$ref": "#/definitions/image"},
+        "containerPort": {"type": "integer", "minimum": 1, "maximum": 65535},
+        "service": {"$ref": "#/definitions/service"},
+        "extraAllowedHosts": {"type": "array", "items": {"type": "string", "minLength": 1}},
+        "resources": {"$ref": "#/definitions/resources"}
+      }
+    },
+    "stubMode": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["enabled", "replicaCount", "publicBaseUrl", "resources"],
+      "properties": {
+        "enabled": {"type": "boolean"},
+        "replicaCount": {"type": "integer", "minimum": 1},
+        "publicBaseUrl": {"type": "string"},
+        "resources": {"$ref": "#/definitions/resources"}
+      }
+    },
+    "realMode": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["enabled", "replicaCount", "publicBaseUrl", "rateLimit", "resources"],
+      "properties": {
+        "enabled": {"type": "boolean"},
+        "replicaCount": {"type": "integer", "minimum": 1, "maximum": 1},
+        "publicBaseUrl": {"type": "string"},
+        "rateLimit": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["enabled", "requests", "windowSeconds"],
+          "properties": {
+            "enabled": {"type": "boolean"},
+            "requests": {"type": "integer", "minimum": 1},
+            "windowSeconds": {"type": "integer", "minimum": 1}
+          }
+        },
+        "resources": {"$ref": "#/definitions/resources"}
+      }
+    },
+    "agent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["image", "containerPort", "service", "extraEnv", "stub", "real"],
+      "properties": {
+        "image": {"$ref": "#/definitions/image"},
+        "containerPort": {"type": "integer", "minimum": 1, "maximum": 65535},
+        "service": {"$ref": "#/definitions/service"},
+        "extraEnv": {"type": "array", "items": {"type": "object"}},
+        "stub": {"$ref": "#/definitions/stubMode"},
+        "real": {"$ref": "#/definitions/realMode"}
+      }
+    }
+  }
+}

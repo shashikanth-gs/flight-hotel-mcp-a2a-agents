@@ -13,6 +13,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 - Exact fixture dataset coverage, date semantics, and unsupported-query documentation.
 - Docker Hub publication workflow for multi-platform MCP, ADK, and LangGraph images.
 - GitHub README image links, status badges, and copy-ready Docker Hub Overview documentation.
+- Helm chart for hardened Kubernetes deployment of MCP and A2A stub or real services.
 - Reproducible uv lock files and automated CI checks.
 - Hardened non-root container images and Compose health checks.
 

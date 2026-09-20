@@ -1,4 +1,4 @@
-.PHONY: install lock lint format format-check test check compose-check clean
+.PHONY: install lock lint format format-check test check compose-check helm-check clean
 
 PROJECTS := mcp-servers agents/adk agents/langgraph
 
@@ -35,7 +35,12 @@ test:
 compose-check:
 	docker compose config --quiet
 
-check: lint format-check test compose-check
+helm-check:
+	helm lint charts/flight-hotel-mcp-a2a
+	helm template travel charts/flight-hotel-mcp-a2a --namespace travel > /dev/null
+	helm template travel charts/flight-hotel-mcp-a2a --namespace travel --set nvidia.existingSecret=nvidia-nim --set agents.adk.real.enabled=true --set agents.langgraph.real.enabled=true > /dev/null
+
+check: lint format-check test compose-check helm-check
 
 clean:
 	rm -rf mcp-servers/.venv agents/adk/.venv agents/langgraph/.venv

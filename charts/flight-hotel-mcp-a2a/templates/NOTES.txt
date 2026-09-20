@@ -1,0 +1,19 @@
+{{- $root := . -}}
+The flight-hotel MCP and A2A playground is installed.
+
+Enabled endpoints inside the cluster:
+{{- range $serverName, $server := .Values.mcp }}
+{{- if $server.enabled }}
+- {{ $serverName }} MCP: http://{{ include "flight-hotel-mcp-a2a.componentName" (dict "root" $root "component" (printf "%s-mcp" $serverName)) }}:{{ $server.service.port }}/mcp
+{{- end }}
+{{- end }}
+{{- range $frameworkName, $agent := dict "adk" .Values.agents.adk "langgraph" .Values.agents.langgraph }}
+{{- range $modeName, $mode := dict "real" $agent.real "stub" $agent.stub }}
+{{- if $mode.enabled }}
+- {{ $frameworkName }} {{ $modeName }} Agent Card: http://{{ include "flight-hotel-mcp-a2a.componentName" (dict "root" $root "component" (printf "%s-%s" $frameworkName $modeName)) }}:{{ $agent.service.port }}/.well-known/agent-card.json
+{{- end }}
+{{- end }}
+{{- end }}
+
+Services are ClusterIP by default. Use kubectl port-forward for local access or place the agent
+Services behind an authenticated HTTPS gateway. These applications do not provide authentication.

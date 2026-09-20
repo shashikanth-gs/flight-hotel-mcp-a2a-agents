@@ -1,0 +1,104 @@
+{{- $root := . -}}
+{{- range $serverName, $server := .Values.mcp }}
+{{- if $server.enabled }}
+{{- $component := printf "%s-mcp" $serverName -}}
+{{- $resourceName := include "flight-hotel-mcp-a2a.componentName" (dict "root" $root "component" $component) -}}
+{{- $hosts := list (printf "%s:%d" $resourceName (int $server.service.port)) (printf "%s.%s.svc.cluster.local:%d" $resourceName $root.Release.Namespace (int $server.service.port)) (printf "localhost:%d" (int $server.service.port)) (printf "127.0.0.1:%d" (int $server.service.port)) -}}
+{{- range $server.extraAllowedHosts }}
+{{- $hosts = append $hosts . -}}
+{{- end }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ $resourceName | quote }}
+  labels:
+    {{- include "flight-hotel-mcp-a2a.componentLabels" (dict "root" $root "component" $component) | nindent 4 }}
+spec:
+  replicas: {{ $server.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "flight-hotel-mcp-a2a.selectorLabels" (dict "root" $root "component" $component) | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "flight-hotel-mcp-a2a.componentLabels" (dict "root" $root "component" $component) | nindent 8 }}
+        {{- with $root.Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      {{- with $root.Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    spec:
+      automountServiceAccountToken: false
+      {{- with $root.Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      securityContext:
+        {{- toYaml $root.Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ $component | quote }}
+          image: {{ include "flight-hotel-mcp-a2a.image" (dict "root" $root "image" $server.image) | quote }}
+          imagePullPolicy: {{ $root.Values.global.imagePullPolicy | quote }}
+          command:
+            - {{ printf "%s-mcp" $serverName | quote }}
+          securityContext:
+            {{- toYaml $root.Values.securityContext | nindent 12 }}
+          env:
+            - name: MCP_HOST
+              value: "0.0.0.0"
+            - name: {{ ternary "FLIGHT_MCP_PORT" "HOTEL_MCP_PORT" (eq $serverName "flight") }}
+              value: {{ $server.containerPort | quote }}
+            - name: MCP_ALLOWED_HOSTS
+              value: {{ join "," $hosts | quote }}
+          ports:
+            - name: http
+              containerPort: {{ $server.containerPort }}
+              protocol: TCP
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+              httpHeaders:
+                - name: Host
+                  value: {{ printf "localhost:%d" (int $server.containerPort) | quote }}
+            initialDelaySeconds: 2
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+              httpHeaders:
+                - name: Host
+                  value: {{ printf "localhost:%d" (int $server.containerPort) | quote }}
+            initialDelaySeconds: 10
+            periodSeconds: 20
+            timeoutSeconds: 3
+            failureThreshold: 3
+          resources:
+            {{- toYaml $server.resources | nindent 12 }}
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: tmp
+          emptyDir:
+            sizeLimit: 64Mi
+      {{- with $root.Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with $root.Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with $root.Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+{{ end }}
+{{ end }}

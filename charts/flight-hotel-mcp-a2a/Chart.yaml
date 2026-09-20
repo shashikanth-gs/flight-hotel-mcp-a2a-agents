@@ -1,0 +1,23 @@
+apiVersion: v2
+name: flight-hotel-mcp-a2a
+description: Flight and hotel MCP fixture servers with Google ADK and LangGraph A2A agents
+type: application
+version: 0.1.0
+appVersion: "0.2.0"
+kubeVersion: ">=1.25.0-0"
+home: https://github.com/shashikanth-gs/flight-hotel-mcp-a2a-agents
+sources:
+  - https://github.com/shashikanth-gs/flight-hotel-mcp-a2a-agents
+maintainers:
+  - name: shashikanth-gs
+    url: https://github.com/shashikanth-gs
+keywords:
+  - a2a
+  - mcp
+  - travel
+  - google-adk
+  - langgraph
+  - litellm
+  - nvidia-nim
+annotations:
+  artifacthub.io/license: Apache-2.0
