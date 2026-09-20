@@ -1,5 +1,9 @@
 # A2A Travel Playground
 
+[![CI](https://github.com/shashikanth-gs/flight-hotel-mcp-a2a-agents/actions/workflows/ci.yml/badge.svg)](https://github.com/shashikanth-gs/flight-hotel-mcp-a2a-agents/actions/workflows/ci.yml)
+[![Publish containers](https://github.com/shashikanth-gs/flight-hotel-mcp-a2a-agents/actions/workflows/publish-containers.yml/badge.svg)](https://github.com/shashikanth-gs/flight-hotel-mcp-a2a-agents/actions/workflows/publish-containers.yml)
+[![License](https://img.shields.io/github/license/shashikanth-gs/flight-hotel-mcp-a2a-agents)](LICENSE)
+
 A small, reproducible interoperability playground for the
 [Agent2Agent (A2A) Protocol](https://a2a-protocol.org/) and the
 [Model Context Protocol (MCP)](https://modelcontextprotocol.io/).
@@ -29,6 +33,26 @@ compatible MCP client can use them directly; the included A2A agents are example
 Every agent publishes an Agent Card at `/.well-known/agent-card.json`. Both implementations
 support A2A JSON-RPC; the LangGraph implementation also exposes A2A HTTP+JSON under `/rest`.
 The MCP services use Streamable HTTP at `/mcp`.
+
+## Published Docker images
+
+| Image | Purpose | Docker Hub |
+|---|---|---|
+| `shashikanthg/flight-hotel-mcp-server` | Flight and hotel MCP fixture servers | [![MCP pulls](https://img.shields.io/docker/pulls/shashikanthg/flight-hotel-mcp-server?label=pulls)](https://hub.docker.com/r/shashikanthg/flight-hotel-mcp-server) |
+| `shashikanthg/flight-hotel-a2a-adk` | Google ADK A2A agent | [![ADK pulls](https://img.shields.io/docker/pulls/shashikanthg/flight-hotel-a2a-adk?label=pulls)](https://hub.docker.com/r/shashikanthg/flight-hotel-a2a-adk) |
+| `shashikanthg/flight-hotel-a2a-langgraph` | LangGraph A2A agent | [![LangGraph pulls](https://img.shields.io/docker/pulls/shashikanthg/flight-hotel-a2a-langgraph?label=pulls)](https://hub.docker.com/r/shashikanthg/flight-hotel-a2a-langgraph) |
+
+Default-branch images support Linux AMD64 and ARM64:
+
+```bash
+docker pull shashikanthg/flight-hotel-mcp-server:main
+docker pull shashikanthg/flight-hotel-a2a-adk:main
+docker pull shashikanthg/flight-hotel-a2a-langgraph:main
+```
+
+Version tags publish semantic-version aliases and `latest`. See
+[publishing container images](docs/publishing-containers.md) for the tag policy and the
+[copy-ready Docker Hub Overviews](docs/dockerhub/README.md) for repository descriptions.
 
 ## Architecture
 

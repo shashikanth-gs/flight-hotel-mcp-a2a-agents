@@ -12,7 +12,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 - Open-source governance, contribution, security, support, and deployment documentation.
 - Exact fixture dataset coverage, date semantics, and unsupported-query documentation.
 - Docker Hub publication workflow for multi-platform MCP, ADK, and LangGraph images.
-- Automated Docker Hub descriptions and package-specific Overview documentation.
+- GitHub README image links, status badges, and copy-ready Docker Hub Overview documentation.
 - Reproducible uv lock files and automated CI checks.
 - Hardened non-root container images and Compose health checks.
 

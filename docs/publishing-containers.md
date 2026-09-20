@@ -23,8 +23,9 @@ selected at runtime.
    - Repository variable `DOCKERHUB_NAMESPACE`: the user or organization that owns the images.
      For a personal namespace, use the same value as `DOCKERHUB_USERNAME`.
    - Repository secret `DOCKERHUB_TOKEN`: the personal access token; do not store a password.
-4. The workflow updates each repository's short description and Overview from its package README
-   after the corresponding image is pushed successfully.
+4. Add the short description and Overview from the
+   [copy-ready Docker Hub documentation](dockerhub/README.md) to each repository. Docker Hub does
+   not populate these fields from OCI image labels.
 
 The workflow never passes the NVIDIA API key into an image build, so model credentials are not
 included in published images.

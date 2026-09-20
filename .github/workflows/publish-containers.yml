@@ -28,20 +28,14 @@ jobs:
             image: flight-hotel-mcp-server
             dockerfile: mcp-servers/Dockerfile
             description: Deterministic flight and hotel fixture servers for any MCP client
-            readme: mcp-servers/README.md
-            short_description: Flight and hotel fixture MCP servers with deterministic travel data
           - name: ADK agent
             image: flight-hotel-a2a-adk
             dockerfile: agents/adk/Dockerfile
             description: Google ADK travel agent with real and deterministic model modes
-            readme: agents/adk/README.md
-            short_description: Google ADK A2A travel agent with MCP tools, LiteLLM stubs, and NVIDIA NIM
           - name: LangGraph agent
             image: flight-hotel-a2a-langgraph
             dockerfile: agents/langgraph/Dockerfile
             description: LangGraph travel agent with real and deterministic model modes
-            readme: agents/langgraph/README.md
-            short_description: LangGraph A2A travel agent with MCP tools, LiteLLM stubs, and NVIDIA NIM
 
     steps:
       - name: Check out repository
@@ -86,13 +80,3 @@ jobs:
           labels: ${{ steps.metadata.outputs.labels }}
           cache-from: type=gha,scope=${{ matrix.image }}
           cache-to: type=gha,mode=max,scope=${{ matrix.image }}
-
-      - name: Update Docker Hub overview
-        uses: peter-evans/dockerhub-description@1b9a80c056b620d92cedb9d9b5a223409c68ddfa # v5
-        with:
-          username: ${{ vars.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-          repository: ${{ vars.DOCKERHUB_NAMESPACE }}/${{ matrix.image }}
-          readme-filepath: ${{ matrix.readme }}
-          short-description: ${{ matrix.short_description }}
-          enable-url-completion: true
