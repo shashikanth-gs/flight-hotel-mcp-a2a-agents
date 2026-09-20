@@ -23,9 +23,8 @@ selected at runtime.
    - Repository variable `DOCKERHUB_NAMESPACE`: the user or organization that owns the images.
      For a personal namespace, use the same value as `DOCKERHUB_USERNAME`.
    - Repository secret `DOCKERHUB_TOKEN`: the personal access token; do not store a password.
-4. Give each Docker Hub repository a short description and link its overview back to this GitHub
-   repository. Docker Hub repository descriptions are managed on Docker Hub and are not populated
-   from OCI image labels.
+4. The workflow updates each repository's short description and Overview from its package README
+   after the corresponding image is pushed successfully.
 
 The workflow never passes the NVIDIA API key into an image build, so model credentials are not
 included in published images.
@@ -53,13 +52,14 @@ it. Only trusted pushes, version tags, and manual runs can reach the publishing 
 
 ## Pulling images
 
-After the first successful publication, replace `<namespace>` with the configured Docker Hub
+To pull the current default-branch builds, replace `<namespace>` with the configured Docker Hub
 namespace:
 
 ```bash
-docker pull <namespace>/flight-hotel-mcp-server:latest
-docker pull <namespace>/flight-hotel-a2a-adk:latest
-docker pull <namespace>/flight-hotel-a2a-langgraph:latest
+docker pull <namespace>/flight-hotel-mcp-server:main
+docker pull <namespace>/flight-hotel-a2a-adk:main
+docker pull <namespace>/flight-hotel-a2a-langgraph:main
 ```
 
-For repeatable deployments, pin a version tag or image digest instead of `latest`.
+The `latest` tag is created with a versioned release. For repeatable deployments, pin a version tag
+or image digest instead of `main` or `latest`.

@@ -15,6 +15,26 @@ These servers have no dependency on A2A or on the included agents. Any client th
 Streamable HTTP can connect directly, including Claude Code, compatible IDEs, and custom MCP
 clients.
 
+## Run the published image
+
+The image contains both server commands. Run one container for each independent MCP endpoint:
+
+```bash
+docker run --rm -p 4301:4301 \
+  -e MCP_ALLOWED_HOSTS=localhost:4301,127.0.0.1:4301 \
+  shashikanthg/flight-hotel-mcp-server:main flight-mcp
+```
+
+```bash
+docker run --rm -p 4302:4302 \
+  -e MCP_ALLOWED_HOSTS=localhost:4302,127.0.0.1:4302 \
+  shashikanthg/flight-hotel-mcp-server:main hotel-mcp
+```
+
+The MCP endpoints are `http://localhost:4301/mcp` and `http://localhost:4302/mcp`. The `main` tag
+tracks the default branch; versioned releases additionally publish semantic-version and `latest`
+tags. Images support Linux AMD64 and ARM64.
+
 ## Run natively
 
 From the repository root:

@@ -18,6 +18,25 @@ The same package supports:
 Compose publishes real mode on port 4201 and stub mode on port 4203. Both containers listen on port
 4201 internally.
 
+## Run the published image
+
+The agent requires reachable flight and hotel MCP endpoints. With both MCP containers attached to a
+Docker network as `flight-mcp` and `hotel-mcp`, start the credential-free stub agent with:
+
+```bash
+docker run --rm --network travel-a2a -p 4203:4201 \
+  -e AGENT_MODEL_MODE=stub \
+  -e ADK_PUBLIC_BASE_URL=http://localhost:4203 \
+  -e FLIGHT_MCP_URL=http://flight-mcp:4301/mcp \
+  -e HOTEL_MCP_URL=http://hotel-mcp:4302/mcp \
+  shashikanthg/flight-hotel-a2a-adk:main
+```
+
+The Agent Card is available at `http://localhost:4203/.well-known/agent-card.json`. For the complete
+six-service setup, use the repository's Compose file. The `main` tag tracks the default branch;
+versioned releases additionally publish semantic-version and `latest` tags. Images support Linux
+AMD64 and ARM64.
+
 ## Run natively
 
 From the repository root:
