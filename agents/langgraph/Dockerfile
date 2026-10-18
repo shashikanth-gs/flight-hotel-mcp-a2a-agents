@@ -1,6 +1,6 @@
 FROM ghcr.io/astral-sh/uv:0.12.12 AS uv
 
-FROM python:3.12-slim
+FROM python:3.14-slim
 
 LABEL org.opencontainers.image.title="A2A Travel Agent — LangGraph" \
       org.opencontainers.image.description="LangGraph travel agent with real and deterministic model modes" \
