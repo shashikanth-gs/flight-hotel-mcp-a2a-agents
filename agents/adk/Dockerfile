@@ -1,6 +1,6 @@
 FROM ghcr.io/astral-sh/uv:0.12.12 AS uv
 
-FROM python:3.12-slim
+FROM python:3.15-slim
 
 LABEL org.opencontainers.image.title="A2A Travel Agent — Google ADK" \
       org.opencontainers.image.description="Google ADK travel agent with real and deterministic model modes" \
